@@ -4,8 +4,8 @@ import cloudinary from "../../utils/uploader.js";
 
 export const createProduct = async (req, res) => {
     try {
-        // Validate required fields
         const { productName, price, description, category } = req.body;
+        console.log(req.file)
 
         if (!req.file || !productName || !price || !description || !category) { 
             return res.status(400).json({
@@ -22,7 +22,7 @@ export const createProduct = async (req, res) => {
             });
         }
 
-        // Check for existing product with the same name
+     
         const existedProduct = await Products.findOne({ productName });
         if (existedProduct) {
             return res.status(409).json({
@@ -33,23 +33,24 @@ export const createProduct = async (req, res) => {
 
 
 
-        const photoUrl = await cloudinary.uploader.upload(`../../${req.file.path}`);
+        const photoUrl = await cloudinary.v2.uploader.upload(req.file.path);
         console.log(photoUrl)
 
-        
+
 
         const product = await Products.create({
             productName,
             price,
             description,
             category,
-            photo: photoUrl.secure_url, 
+            photo: photoUrl.url, 
         });
 
         return res.status(201).json({
             success: true,
             message: "Product is added successfully",
-            product,
+            product
+            
         });
     } catch (error) {
         console.error(error);
