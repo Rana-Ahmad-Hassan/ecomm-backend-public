@@ -7,14 +7,14 @@ export const createProduct = async (req, res) => {
         // Validate required fields
         const { productName, price, description, category } = req.body;
 
-        if (!req.file || !productName || !price || !description || !category) { // Check for both file and other fields
+        if (!req.file || !productName || !price || !description || !category) { 
             return res.status(400).json({
                 success: false,
                 message: "All fields and a photo are required",
             });
         }
 
-        // Check if the uploaded file is valid (optional, adapt to your needs)
+        
         if (!req.file.mimetype.startsWith('image/')) {
             return res.status(400).json({
                 success: false,
@@ -31,13 +31,13 @@ export const createProduct = async (req, res) => {
             });
         }
 
-        console.log(req.file.path)
 
-        
-        const photoUrl = await cloudinary.uploader.upload(req.file.path);
+
+        const photoUrl = await cloudinary.uploader.upload(`../../${req.file.path}`);
         console.log(photoUrl)
 
-        // Create the product with the uploaded image URL
+        
+
         const product = await Products.create({
             productName,
             price,
