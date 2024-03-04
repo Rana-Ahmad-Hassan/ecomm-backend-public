@@ -33,8 +33,12 @@ export const createProduct = async (req, res) => {
 
 
 
-        const photoUrl = await cloudinary.v2.uploader.upload(req.file.path);
-        console.log(photoUrl)
+        const photoUrl = await cloudinary.v2.uploader.upload(req.file.path, {
+
+            resource_type: "auto"
+
+        });
+       
 
 
 
@@ -43,7 +47,7 @@ export const createProduct = async (req, res) => {
             price,
             description,
             category,
-            photo: photoUrl.url, 
+            photo: photoUrl.secure_url, 
         });
 
         return res.status(201).json({
